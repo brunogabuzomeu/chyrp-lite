@@ -1388,7 +1388,7 @@ var Write = {
         form.insertAfter("#content");
 
         // Build and display the named iframe.
-        $(
+        var modal = $(
             "<div>",
             {
                 "role": "dialog",
@@ -1442,7 +1442,21 @@ var Write = {
                 if (e.target === e.currentTarget)
                     $(this).remove();
             }
-        ).insertAfter("#content").children("a.iframe_close_gadget").focus();
+        ).insertAfter("#content");
+
+        modal.children("a.iframe_close_gadget").focus();
+
+        var keydown_handler = function(e) {
+            if (e.key === "Escape" || e.keyCode === 27) {
+                modal.remove();
+            }
+        };
+
+        $(document).on("keydown", keydown_handler);
+
+        modal.on("remove", function() {
+            $(document).off("keydown", keydown_handler);
+        });
 
         // Submit the form and destroy it immediately.
         $("#" + uid).submit().remove();
